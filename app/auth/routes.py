@@ -51,3 +51,47 @@ def register():
         return redirect(url_for("auth.login"))
 
     return render_template("auth/register.html", form={})
+
+@auth_bp.route("/login", methods=["GET", "POST"])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("listings.index"))
+
+    if request.method == "POST":
+        email = (request.form.get("email") or "").strip().lower()
+        password = request.form.get("password") or ""
+        ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+
+        user = User.query.filter_by(email=email).first()
+
+        success = False
+        if user and user.is_active and check_password_hash(user.password_hash, password):
+            success = True
+            login_user(user)
+            flash("Welcome back!", "success")
+        else:
+            flash("Invalid credentials or account inactive.", "danger")
+
+        # Track attempts (requirement explicitly mentions tracking failed attempts).
+        attempt = LoginAttempt(
+            email=email,
+            ip_address=ip,
+            attempted_at=datetime.utcnow(),
+            success=success,
+            user_id=user.id if user else None,
+        )
+        db.session.add(attempt)
+        db.session.commit()
+
+        if success:
+            return redirect(url_for("listings.index"))
+        return redirect(url_for("auth.login"))
+
+    return render_template("auth/login.html")
+
+@auth_bp.route("/logout")
+def logout():
+    if current_user.is_authenticated:
+        logout_user()
+        flash("You have been logged out.", "info")
+    return redirect(url_for("auth.login"))
