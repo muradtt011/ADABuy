@@ -49,3 +49,29 @@ def remove_listing(listing_id: int):
     db.session.commit()
     flash("Listing removed.", "success")
     return redirect(url_for("admin.dashboard"))
+
+# Optional future feature per SRS: deactivate abusive user accounts.
+@admin_bp.route("/users")
+@login_required
+@admin_required
+def users():
+    users = User.query.order_by(User.created_at.desc()).all()
+    return render_template("admin/users.html", users=users)
+
+@admin_bp.route("/users/<int:user_id>/toggle-active", methods=["POST"])
+@login_required
+@admin_required
+def toggle_user_active(user_id: int):
+    user = db.session.get(User, user_id)
+    if not user:
+        flash("User not found.", "danger")
+        return redirect(url_for("admin.users"))
+
+    if user.is_admin:
+        flash("Admin accounts cannot be deactivated from this UI.", "warning")
+        return redirect(url_for("admin.users"))
+
+    user.is_active = not user.is_active
+    db.session.commit()
+    flash("User status updated.", "success")
+    return redirect(url_for("admin.users"))
