@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}
+  {% if mode == "edit" %}Edit Listing{% else %}Create Listing{% endif %} • ADABuy
+{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-3">
+  {% if mode == "edit" %}Edit Listing{% else %}Create Listing{% endif %}
+</h1>
+
+<div class="card shadow-sm">
+  <div class="card-body p-4">
+    <form method="post" enctype="multipart/form-data" novalidate>
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" name="title" class="form-control" value="{{ form.title or '' }}" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control" rows="5" required>{{ form.description or '' }}</textarea>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Category</label>
+          <input class="form-control" list="categoryOptions" name="category" value="{{ form.category or '' }}" placeholder="e.g., Textbooks" required>
+          <datalist id="categoryOptions">
+            {% for c in categories %}
+              <option value="{{ c }}"></option>
+            {% endfor %}
+          </datalist>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Price (AZN)</label>
+          <input type="text" name="price" class="form-control" value="{{ form.price or '' }}" placeholder="0.00" required>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <label class="form-label">Image (optional)</label>
+        <input type="file" name="image" class="form-control" accept=".png,.jpg,.jpeg,.gif,.webp">
+        {% if mode == "edit" and listing and listing.image_filename %}
+          <div class="form-text">
+            Current image:
+            <a href="{{ url_for('static', filename='uploads/' ~ listing.image_filename) }}" target="_blank">view</a>
+            (upload a new image to replace it)
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="d-flex gap-2 mt-4">
+        <button class="btn btn-primary" type="submit">
+          {% if mode == "edit" %}Save changes{% else %}Create listing{% endif %}
+        </button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('listings.my_listings') }}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Remove Listing • ADABuy{% endblock %}
+
+{% block content %}
+<h1 class="h4 mb-3">Remove listing</h1>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <p class="mb-2">
+      Are you sure you want to remove <strong>{{ listing.title }}</strong>?
+    </p>
+    <p class="text-muted small mb-4">
+      This will hide the listing from browsing and search results.
+    </p>
+
+    <form method="post" class="d-flex gap-2">
+      <button class="btn btn-danger" type="submit">Yes, remove</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('listings.my_listings') }}">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

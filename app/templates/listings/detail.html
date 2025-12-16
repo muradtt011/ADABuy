@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ listing.title }} • ADABuy{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+  <div>
+    <h1 class="h3 mb-1">{{ listing.title }}</h1>
+    <div class="text-muted">
+      <span class="badge text-bg-secondary">{{ listing.category }}</span>
+      {% if not listing.is_active %}
+        <span class="badge text-bg-danger">Removed</span>
+      {% endif %}
+      <span class="ms-2">Posted {{ listing.created_at.strftime("%Y-%m-%d %H:%M") }}</span>
+    </div>
+  </div>
+
+  <div class="text-end">
+    <div class="h4 mb-2">{{ "%.2f"|format(listing.price) }} AZN</div>
+
+    {% if current_user.is_admin or current_user.id == listing.seller_id %}
+      <div class="d-flex gap-2 justify-content-end">
+        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('listings.edit', listing_id=listing.id) }}">Edit</a>
+        <a class="btn btn-outline-danger btn-sm" href="{{ url_for('listings.delete', listing_id=listing.id) }}">Remove</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    {% if listing.image_filename %}
+      <img src="{{ url_for('static', filename='uploads/' ~ listing.image_filename) }}" class="img-fluid rounded shadow-sm" alt="Listing image">
+    {% else %}
+      <div class="placeholder-detail d-flex align-items-center justify-content-center text-muted rounded">
+        No image provided
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h5">Description</h2>
+        <p class="mb-4">{{ listing.description }}</p>
+
+        <h2 class="h5">Seller contact</h2>
+        <div class="mb-0">
+          <div><span class="text-muted">Name:</span> {{ listing.seller.name }}</div>
+          <div><span class="text-muted">Email:</span> <a href="mailto:{{ listing.seller.email }}">{{ listing.seller.email }}</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
