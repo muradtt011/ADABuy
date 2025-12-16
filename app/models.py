@@ -53,3 +53,14 @@ class Listing(db.Model):
         CheckConstraint("price >= 0", name="ck_listings_price_nonnegative"),
         Index("ix_listings_title", "title"),
     )
+
+class LoginAttempt(db.Model):
+    __tablename__ = "login_attempts"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(db.String(255), nullable=False, index=True)
+    ip_address: Mapped[Optional[str]] = mapped_column(db.String(64), nullable=True)
+    attempted_at: Mapped[datetime] = mapped_column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
+    success: Mapped[bool] = mapped_column(db.Boolean, default=False, nullable=False)
+
+    user_id: Mapped[Optional[int]] = mapped_column(db.Integer, db.ForeignKey("users.id"), nullable=True)
