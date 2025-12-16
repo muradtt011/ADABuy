@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}My Listings • ADABuy{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 mb-0">My Listings</h1>
+  <a class="btn btn-primary" href="{{ url_for('listings.create') }}">+ Create Listing</a>
+</div>
+
+{% if listings %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Category</th>
+          <th class="text-end">Price</th>
+          <th>Status</th>
+          <th>Updated</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in listings %}
+          <tr>
+            <td class="fw-semibold">
+              <a href="{{ url_for('listings.detail', listing_id=item.id) }}">{{ item.title }}</a>
+            </td>
+            <td><span class="badge text-bg-secondary">{{ item.category }}</span></td>
+            <td class="text-end">{{ "%.2f"|format(item.price) }} AZN</td>
+            <td>
+              {% if item.is_active %}
+                <span class="badge text-bg-success">Active</span>
+              {% else %}
+                <span class="badge text-bg-danger">Removed</span>
+              {% endif %}
+            </td>
+            <td class="text-muted small">{{ item.updated_at.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm" role="group">
+                <a class="btn btn-outline-primary" href="{{ url_for('listings.edit', listing_id=item.id) }}">Edit</a>
+                <a class="btn btn-outline-danger" href="{{ url_for('listings.delete', listing_id=item.id) }}">Remove</a>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info">
+    You have not created any listings yet.
+  </div>
+{% endif %}
+{% endblock %}
