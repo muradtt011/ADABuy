@@ -1,0 +1,9 @@
+.listing-thumb {
+  height: 160px;
+  object-fit: cover;
+}
+
+.placeholder-thumb {
+  height: 160px;
+  background: #f1f3f5;
+}
