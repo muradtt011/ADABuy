@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite
+instance/
+.env
+venv/
+.envrc
+logs/
+app/static/uploads/*
+!app/static/uploads/.keep
