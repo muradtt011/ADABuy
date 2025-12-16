@@ -7,3 +7,16 @@
   height: 160px;
   background: #f1f3f5;
 }
+
+
+.placeholder-detail {
+  height: 320px;
+  background: #f1f3f5;
+}
+
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
