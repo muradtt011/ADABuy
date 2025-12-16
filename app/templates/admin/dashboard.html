@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard • ADABuy{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h1 class="h3 mb-0">Admin Dashboard</h1>
+    <div class="text-muted">Moderate listings (remove inappropriate/misleading posts).</div>
+  </div>
+  <a class="btn btn-outline-secondary" href="{{ url_for('admin.users') }}">Manage users</a>
+</div>
+
+<form class="card card-body mb-4" method="get" action="{{ url_for('admin.dashboard') }}">
+  <div class="row g-3 align-items-end">
+    <div class="col-md-4">
+      <label class="form-label">Search</label>
+      <input type="text" name="q" class="form-control" value="{{ q }}" placeholder="Keyword">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Status</label>
+      <select class="form-select" name="status">
+        <option value="all" {% if status == "all" %}selected{% endif %}>All</option>
+        <option value="active" {% if status == "active" %}selected{% endif %}>Active</option>
+        <option value="inactive" {% if status == "inactive" %}selected{% endif %}>Removed</option>
+      </select>
+    </div>
+    <div class="col-12 d-flex gap-2">
+      <button class="btn btn-outline-primary" type="submit">Apply</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('admin.dashboard') }}">Clear</a>
+    </div>
+  </div>
+</form>
+
+{% if listings %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Seller</th>
+          <th>Category</th>
+          <th class="text-end">Price</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in listings %}
+          <tr>
+            <td class="fw-semibold">
+              <a href="{{ url_for('listings.detail', listing_id=item.id) }}">{{ item.title }}</a>
+            </td>
+            <td class="text-muted small">{{ item.seller.email }}</td>
+            <td><span class="badge text-bg-secondary">{{ item.category }}</span></td>
+            <td class="text-end">{{ "%.2f"|format(item.price) }} AZN</td>
+            <td>
+              {% if item.is_active %}
+                <span class="badge text-bg-success">Active</span>
+              {% else %}
+                <span class="badge text-bg-danger">Removed</span>
+              {% endif %}
+            </td>
+            <td class="text-muted small">{{ item.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td class="text-end">
+              {% if item.is_active %}
+                <form method="post" action="{{ url_for('admin.remove_listing', listing_id=item.id) }}" class="d-inline">
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+                </form>
+              {% else %}
+                <span class="text-muted small">—</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info">No listings found.</div>
+{% endif %}
+{% endblock %}
