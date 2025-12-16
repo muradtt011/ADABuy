@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Login • ADABuy{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h4 mb-3">Login</h1>
+        <form method="post" novalidate>
+          <div class="mb-3">
+            <label class="form-label">ADA Email</label>
+            <input type="email" name="email" class="form-control" placeholder="name@ada.edu.az" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+          <button class="btn btn-primary w-100" type="submit">Login</button>
+        </form>
+
+        <hr class="my-4">
+
+        <p class="mb-0 small">
+          Don't have an account?
+          <a href="{{ url_for('auth.register') }}">Register</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

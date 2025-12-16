@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Register • ADABuy{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7 col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h4 mb-3">Create an account</h1>
+
+        <div class="alert alert-info small">
+          Registration is restricted to <strong>@ada.edu.az</strong> email addresses.
+        </div>
+
+        <form method="post" novalidate>
+          <div class="mb-3">
+            <label class="form-label">Full name</label>
+            <input type="text" name="name" class="form-control" value="{{ form.name or '' }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">ADA Email</label>
+            <input type="email" name="email" class="form-control" value="{{ form.email or '' }}" placeholder="name@ada.edu.az" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" required>
+            <div class="form-text">
+              Minimum 8 chars, with uppercase, lowercase, number, and special character.
+            </div>
+          </div>
+
+          <button class="btn btn-primary w-100" type="submit">Register</button>
+        </form>
+
+        <hr class="my-4">
+
+        <p class="mb-0 small">
+          Already registered?
+          <a href="{{ url_for('auth.login') }}">Login</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
